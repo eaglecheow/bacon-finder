@@ -1,5 +1,3 @@
-from raspi.utils.camera.Camera import Camera
-from raspi.utils.camera.CameraType import CameraType
 import numpy
 import dlib
 import cv2
@@ -10,7 +8,6 @@ import math
 class StaticMovementDetector:
     def __init__(
         self,
-        cameraObject: Camera,
         noiseMargin: int = 50,
         movementThreshold: float = 3,
         movementTimeout: int = 5000,
@@ -18,9 +15,8 @@ class StaticMovementDetector:
     ):
         super().__init__()
 
-        self.camera = cameraObject
-        self.orb = cv2.ORB_create()
-        self.bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+        # self.orb = cv2.ORB_create()
+        # self.bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
         self.showFrame = showFrame
 
         if self.showFrame == True:
@@ -36,25 +32,28 @@ class StaticMovementDetector:
         self.staticStartTime = None
         self.isStart = True
 
-    def compareFrame(self) -> bool:
+    def compareFrame(self, frame) -> bool:
         if self.isStart:
 
-            self.currentImage = self.camera.takeFrame()
+            self.currentImage = frame
             self.isStart = False
 
             return False
 
         else:
 
-            self.previousImage = self.currentImage
-            self.currentImage = self.camera.takeFrame()
+            orb = cv2.ORB_create()
+            bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
-            kp1, des1 = self.orb.detectAndCompute(self.previousImage, None)
-            kp2, des2 = self.orb.detectAndCompute(self.currentImage, None)
+            self.previousImage = self.currentImage
+            self.currentImage = frame
+
+            kp1, des1 = orb.detectAndCompute(self.previousImage, None)
+            kp2, des2 = orb.detectAndCompute(self.currentImage, None)
 
             if des2 is None:
                 des2 = []
-            matches = self.bf.match(des1, des2)
+            matches = bf.match(des1, des2)
 
             matches = sorted(matches, key=lambda x: x.distance)
 
@@ -107,13 +106,14 @@ class StaticMovementDetector:
             else:
                 return False
 
-    def detectStatic(self):
+    def detectStatic(self, frame):
 
-        isStatic = self.compareFrame()
+        isStatic = self.compareFrame(frame)
         # print("FrameStatic: {}".format(isStatic))
 
         if self.staticStartTime == None:
             self.staticStartTime = time.time() * 1000
+            # return {'resultType': 'static', 'result': False}
             return False
 
         else:
@@ -121,9 +121,12 @@ class StaticMovementDetector:
 
             if isStatic == True:
                 if (currentTime - self.staticStartTime) > self.movementTimeout:
+                    # return {'resultType': 'static', 'result': True}
                     return True
                 else:
+                    # return {'resultType': 'static', 'result': False}
                     return False
             else:
                 self.staticStartTime = currentTime
+                # return {'resultType': 'static', 'result': False}
                 return False

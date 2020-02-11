@@ -36,15 +36,23 @@ import json
 # Test for overall Image Detection #
 ####################################
 
-with open("config.json") as jsonFile:
-    config = json.load(jsonFile)
 
-imageBasedDetector = ImageBasedDetector(
-    CameraType.WEB_CAM, config["detectionConfig"]["imageDetectionConfig"], debug=True
-)
+def main():
+    with open("config.json") as jsonFile:
+        config = json.load(jsonFile)
 
-while True:
-    imageBasedDetector.detect()
+    imageBasedDetector = ImageBasedDetector(
+        CameraType.WEB_CAM,
+        config["detectionConfig"]["imageDetectionConfig"],
+        debug=False,
+    )
+
+    while True:
+        imageBasedDetector.detect()
+
+
+if __name__ == "__main__":
+    main()
 
 
 ##############################

@@ -5,13 +5,19 @@
                 "faceModelFilePath": "C:\\\\Users\\user\\Desktop\\Dev\\Research\\dlibTest\\trained_model\\shape_predictor_68_face_landmarks.dat",
                 "faceAbsenceTimeout": 100000,
                 "eyelidMovementTimeout": 30000,
-                "frameTimeTimeout": 1000,
+                "frameTimeTimeout": 100000,
                 "eyelidMovementThreshold": 0.025
             },
             "staticMovementDetectionConfig": {
                 "noiseMargin": 50,
                 "movementThreshold": 3,
                 "movementTimeout": 10000
+            }
+        },
+        "sensorDetectionConfig": {
+            "generalConfig": {
+                "arduinoSerialPort": "COM4",
+                "arduinoBaudRate": 9600
             }
         }
     }

@@ -5,8 +5,6 @@ import numpy
 from imutils import face_utils
 import time
 
-from ...utils.camera.Camera import Camera
-from ...utils.camera.CameraType import CameraType
 from ...utils.dataprocess.DataObserver import DataObserver
 
 
@@ -14,7 +12,6 @@ class EyelidDetector:
     def __init__(
         self,
         predictionFilePath: str,
-        cameraObject: Camera,
         faceAbsenceTimeout: int = 100000,
         eyelidMovementTimeout: int = 30000,
         frameTimeTimeout: int = 1000,
@@ -29,7 +26,6 @@ class EyelidDetector:
         faceDetector = dlib.get_frontal_face_detector()
         faceFeatureDetector = dlib.shape_predictor(predictionFilePath)
 
-        self.camera = cameraObject
         self.faceDetector = faceDetector
         self.faceFeatureDetector = faceFeatureDetector
         self.dataProcessor = DataObserver()
@@ -51,7 +47,7 @@ class EyelidDetector:
             self.imageWindow = dlib.image_window()
             self.imageWindow.set_title("Face Detector")
 
-    def frameDetection(self) -> bool:
+    def frameDetection(self, frame) -> bool:
         currentTime = time.time() * 1000
 
         if (currentTime - self.lastScanTime) > self.frameTimeTimeout:
@@ -59,7 +55,6 @@ class EyelidDetector:
 
         self.lastScanTime = currentTime
 
-        frame = self.camera.takeFrame()
         detectedFaceList = self.faceDetector(frame)
 
         if self.showFrame:
@@ -69,8 +64,10 @@ class EyelidDetector:
         if len(detectedFaceList) <= 0:
 
             if (currentTime - self.lastFacePresenceTime) > self.faceAbsenceTimeout:
+                # return {'resultType': 'eyelid', 'result': False}
                 return False
 
+            # return {'resultType': 'eyelid', 'result': True}
             return True
 
         self.lastFacePresenceTime = currentTime
@@ -118,8 +115,10 @@ class EyelidDetector:
         # print("Eyelid idle time: {} ms".format(currentTime - self.lastEyelidMoveTime))
 
         if (currentTime - self.lastEyelidMoveTime) > self.eyelidMovementTimeout:
+            # return {'resultType': 'eyelid', 'result': False}
             return False
 
+        # return {'resultType': 'eyelid', 'result': True}
         return True
 
     def __euclidean_distance__(self, pointA: float, pointB: float) -> float:

@@ -12,6 +12,8 @@ class Camera:
             print("[Camera] Initializing camera in mode: WEB_CAM")
 
             self.cameraObject = cv2.VideoCapture(0)
+            self.cameraObject.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            self.cameraObject.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
         elif cameraMode == CameraType.PI_CAM:
             print("[Camera] Initializing camera in mode: PI_CAM")

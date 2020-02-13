@@ -2,9 +2,10 @@ from raspi.detection.camera.EyelidDetector import EyelidDetector
 from raspi.detection.camera.StaticMovementDetector import StaticMovementDetector
 from raspi.utils.camera.Camera import Camera
 from raspi.utils.camera.CameraType import CameraType
-from raspi.detection.AccidentDetector import ImageBasedDetector
+from raspi.detection.AccidentDetector import ImageBasedDetector, SensorBasedDetector
 import sys
 import json
+import logging
 
 ############################
 # Test for Eyelid Detector #
@@ -37,22 +38,21 @@ import json
 ####################################
 
 
-def main():
-    with open("config.json") as jsonFile:
-        config = json.load(jsonFile)
+# def main():
+#     with open("config.json") as jsonFile:
+#         config = json.load(jsonFile)
 
-    imageBasedDetector = ImageBasedDetector(
-        CameraType.WEB_CAM,
-        config["detectionConfig"]["imageDetectionConfig"],
-        debug=False,
-    )
+#     imageBasedDetector = ImageBasedDetector(
+#         CameraType.WEB_CAM,
+#         config["detectionConfig"]["imageDetectionConfig"],
+#         cameraConfig=config["generalConfig"]["camera"],
+#         debug=True,
+#     )
 
-    while True:
-        imageBasedDetector.detect()
-
-
-if __name__ == "__main__":
-    main()
+#     while True:
+#         imageBasedDetector.detect()
+# if __name__conf == "__main__":
+#     main()conf
 
 
 ##############################
@@ -63,3 +63,28 @@ if __name__ == "__main__":
 #     data = json.load(jsonFile)
 
 # print(data["detectionConfig"]["imageDetectionConfig"]["eyelidDetectionConfig"]["faceModelFilePath"])
+
+
+###################################
+# Test for Sensor Based Detection #
+###################################
+
+
+def main():
+    print("Process Start")
+    logging.basicConfig(level=logging.DEBUG, filename="sensorData.log")
+
+    with open("config.json") as jasonFile:
+        config = json.load(jasonFile)
+
+    sensorDetector = SensorBasedDetector(
+        config["detectionConfig"]["sensorDetectionConfig"]
+    )
+
+    while True:
+        logging.debug(sensorDetector.readValue())
+
+
+if __name__ == "__main__":
+    main()
+

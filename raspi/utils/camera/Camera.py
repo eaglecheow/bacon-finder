@@ -3,17 +3,19 @@ from .CameraType import CameraType
 
 
 class Camera:
-    def __init__(self, cameraMode: CameraType):
+    def __init__(self, cameraMode: CameraType, cameraConfig):
         super().__init__()
 
         self.cameraMode = cameraMode
+
+        imageResolution = cameraConfig["imageResolution"]
 
         if cameraMode == CameraType.WEB_CAM:
             print("[Camera] Initializing camera in mode: WEB_CAM")
 
             self.cameraObject = cv2.VideoCapture(0)
-            self.cameraObject.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-            self.cameraObject.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+            self.cameraObject.set(cv2.CAP_PROP_FRAME_WIDTH, imageResolution["width"])
+            self.cameraObject.set(cv2.CAP_PROP_FRAME_HEIGHT, imageResolution["height"])
 
         elif cameraMode == CameraType.PI_CAM:
             print("[Camera] Initializing camera in mode: PI_CAM")

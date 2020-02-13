@@ -1,11 +1,19 @@
 {
+    "generalConfig": {
+        "camera": {
+            "imageResolution": {
+                "width": 256,
+                "height": 144
+            }
+        }
+    },
     "detectionConfig": {
         "imageDetectionConfig": {
             "eyelidDetectionConfig": {
                 "faceModelFilePath": "C:\\\\Users\\user\\Desktop\\Dev\\Research\\dlibTest\\trained_model\\shape_predictor_68_face_landmarks.dat",
                 "faceAbsenceTimeout": 100000,
-                "eyelidMovementTimeout": 30000,
-                "frameTimeTimeout": 100000,
+                "eyelidMovementTimeout": 10000,
+                "frameTimeTimeout": 2000,
                 "eyelidMovementThreshold": 0.025
             },
             "staticMovementDetectionConfig": {
@@ -16,7 +24,7 @@
         },
         "sensorDetectionConfig": {
             "generalConfig": {
-                "arduinoSerialPort": "COM4",
+                "arduinoSerialPort": "COM10",
                 "arduinoBaudRate": 9600
             }
         }

@@ -40,7 +40,7 @@ class SerialHelper:
             raise Exception("[Serial] Trying to read data with closed serial")
 
         returnMessage = self.serialObject.readline().decode().strip("\r\n")
-        print("[{}] {}".format(datetime.datetime.now().time(), returnMessage))
+        # print("[{}] {}".format(datetime.datetime.now().time(), returnMessage))
 
         return returnMessage
 

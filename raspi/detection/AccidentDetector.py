@@ -2,18 +2,33 @@ from raspi.utils.camera.Camera import Camera
 from raspi.utils.camera.CameraType import CameraType
 from raspi.detection.camera.EyelidDetector import EyelidDetector
 from raspi.detection.camera.StaticMovementDetector import StaticMovementDetector
-from concurrent.futures.process import ProcessPoolExecutor
-from concurrent.futures import wait
+from raspi.utils.SerialHelper import SerialHelper
+
+
+class SensorBasedDetector:
+    def __init__(self, config):
+        super().__init__()
+
+        generalConfig = config["generalConfig"]
+
+        self.serialReader = SerialHelper(
+            generalConfig["arduinoSerialPort"], generalConfig["arduinoBaudRate"]
+        )
+
+    def readValue(self):
+        return self.serialReader.readLine()
 
 
 class ImageBasedDetector:
-    def __init__(self, cameraType: CameraType, config, debug: bool = False):
+    def __init__(
+        self, cameraType: CameraType, config, cameraConfig, debug: bool = False
+    ):
         super().__init__()
 
         eyelidDetectorConfig = config["eyelidDetectionConfig"]
         staticMovementConfig = config["staticMovementDetectionConfig"]
 
-        self.camera = Camera(cameraType)
+        self.camera = Camera(cameraType, cameraConfig)
         self.eyelidDetector = EyelidDetector(
             eyelidDetectorConfig["faceModelFilePath"],
             eyelidDetectorConfig["faceAbsenceTimeout"],

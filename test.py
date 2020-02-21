@@ -38,21 +38,21 @@ import logging
 ####################################
 
 
-# def main():
-#     with open("config.json") as jsonFile:
-#         config = json.load(jsonFile)
+def main():
+    with open("config.json") as jsonFile:
+        config = json.load(jsonFile)
 
-#     imageBasedDetector = ImageBasedDetector(
-#         CameraType.WEB_CAM,
-#         config["detectionConfig"]["imageDetectionConfig"],
-#         cameraConfig=config["generalConfig"]["camera"],
-#         debug=True,
-#     )
+    imageBasedDetector = ImageBasedDetector(
+        CameraType.WEB_CAM,
+        config["detectionConfig"]["imageDetectionConfig"],
+        cameraConfig=config["generalConfig"]["camera"],
+        debug=True,
+    )
 
-#     while True:
-#         imageBasedDetector.detect()
-# if __name__conf == "__main__":
-#     main()conf
+    while True:
+        imageBasedDetector.detect()
+if __name__ == "__main__":
+    main()
 
 
 ##############################
@@ -70,21 +70,21 @@ import logging
 ###################################
 
 
-def main():
-    print("Process Start")
-    logging.basicConfig(level=logging.DEBUG, filename="sensorData.log")
+# def main():
+#     print("Process Start")
+#     logging.basicConfig(level=logging.DEBUG, filename="sensorData.log")
 
-    with open("config.json") as jasonFile:
-        config = json.load(jasonFile)
+#     with open("config.json") as jasonFile:
+#         config = json.load(jasonFile)
 
-    sensorDetector = SensorBasedDetector(
-        config["detectionConfig"]["sensorDetectionConfig"]
-    )
+#     sensorDetector = SensorBasedDetector(
+#         config["detectionConfig"]["sensorDetectionConfig"]
+#     )
 
-    while True:
-        logging.debug(sensorDetector.readValue())
+#     while True:
+#         logging.debug(sensorDetector.readValue())
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 

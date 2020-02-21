@@ -13,7 +13,7 @@
                 "faceModelFilePath": "C:\\\\Users\\user\\Desktop\\Dev\\Research\\dlibTest\\trained_model\\shape_predictor_68_face_landmarks.dat",
                 "faceAbsenceTimeout": 100000,
                 "eyelidMovementTimeout": 10000,
-                "frameTimeTimeout": 2000,
+                "frameTimeTimeout": 5000,
                 "eyelidMovementThreshold": 0.025
             },
             "staticMovementDetectionConfig": {

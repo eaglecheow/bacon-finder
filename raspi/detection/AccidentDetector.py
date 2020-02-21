@@ -48,21 +48,6 @@ class ImageBasedDetector:
 
         frame = self.camera.takeFrame()
 
-        # futures.append(pool.submit(self.eyelidDetector.frameDetection, frame))
-        # futures.append(pool.submit(self.staticMovementDetector.detectStatic, frame))
-
-        # (completedResult, incompleteResult) = wait(futures)
-        # isEyelidActive = None
-        # isImageStatic = None
-
-        # for resultObject in completedResult:
-        #     result = resultObject.result()
-
-        #     if result["resultType"] == "eyelid":
-        #         isEyelidActive = result["result"]
-        #     elif result["resultType"] == "static":
-        #         isImageStatic = result["result"]
-
         isEyelidActive = self.eyelidDetector.frameDetection(frame)
         isImageStatic = self.staticMovementDetector.detectStatic(frame)
 

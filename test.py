@@ -70,21 +70,21 @@ if __name__ == "__main__":
 ###################################
 
 
-# def main():
-#     print("Process Start")
-#     logging.basicConfig(level=logging.DEBUG, filename="sensorData.log")
+def main():
+    print("Process Start")
+    logging.basicConfig(level=logging.DEBUG, filename="sensorData.log")
 
-#     with open("config.json") as jasonFile:
-#         config = json.load(jasonFile)
+    with open("config.json") as jasonFile:
+        config = json.load(jasonFile)
 
-#     sensorDetector = SensorBasedDetector(
-#         config["detectionConfig"]["sensorDetectionConfig"]
-#     )
+    sensorDetector = SensorBasedDetector(
+        config["detectionConfig"]["sensorDetectionConfig"]
+    )
 
-#     while True:
-#         logging.debug(sensorDetector.readValue())
+    while True:
+        logging.debug(sensorDetector.readValue())
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
 

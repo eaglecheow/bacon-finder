@@ -1,33 +1,40 @@
-const int pinX = A0;
-const int pinY = A1;
-const int pinZ = A2;
+const int pinAccX = A0;
+const int pinAccY = A1;
+const int pinAccZ = A2;
+const int pinShockSensor = A3;
 
-void setup() {
+void setup()
+{
   // put your setup code here, to run once:
 
   Serial.begin(9600);
-  pinMode(pinX, INPUT);
-  pinMode(pinY, INPUT);
-  pinMode(pinZ, INPUT);
-  
+  pinMode(pinAccX, INPUT);
+  pinMode(pinAccY, INPUT);
+  pinMode(pinAccZ, INPUT);
+  pinMode(pinShockSensor, INPUT);
 }
 
-void loop() {
+void loop()
+{
   // put your main code here, to run repeatedly:
 
   // For Arduino Serial Plotter
-  Serial.print(analogRead(pinX));
-  Serial.print(" ");
-  Serial.print(analogRead(pinY));
-  Serial.print(" ");
-  Serial.println(analogRead(pinZ));
+  // Serial.print(analogRead(pinAccX));
+  // Serial.print(" ");
+  // Serial.print(analogRead(pinAccY));
+  // Serial.print(" ");
+  // Serial.print(analogRead(pinAccZ));
+  // Serial.print(" ");
+  // Serial.println(analogRead(pinShockSensor));
 
   // For Python Code
-//  Serial.print("X:");
-//  Serial.print(analogRead(pinX));
-//  Serial.print(";Y:");
-//  Serial.print(analogRead(pinY));
-//  Serial.print(";Z:");
-//  Serial.print(analogRead(pinZ));
-//  Serial.println(";");
+  Serial.print("X:");
+  Serial.print(analogRead(pinAccX));
+  Serial.print(";Y:");
+  Serial.print(analogRead(pinAccY));
+  Serial.print(";Z:");
+  Serial.print(analogRead(pinAccZ));
+  Serial.print(";V:");
+  Serial.print(analogRead(pinShockSensor));
+  Serial.println(";");
 }

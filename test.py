@@ -38,21 +38,21 @@ import logging
 ####################################
 
 
-def main():
-    with open("config.json") as jsonFile:
-        config = json.load(jsonFile)
+# def main():
+#     with open("config.json") as jsonFile:
+#         config = json.load(jsonFile)
 
-    imageBasedDetector = ImageBasedDetector(
-        CameraType.WEB_CAM,
-        config["detectionConfig"]["imageDetectionConfig"],
-        cameraConfig=config["generalConfig"]["camera"],
-        debug=True,
-    )
+#     imageBasedDetector = ImageBasedDetector(
+#         CameraType.WEB_CAM,
+#         config["detectionConfig"]["imageDetectionConfig"],
+#         cameraConfig=config["generalConfig"]["camera"],
+#         debug=True,
+#     )
 
-    while True:
-        imageBasedDetector.detect()
-if __name__ == "__main__":
-    main()
+#     while True:
+#         imageBasedDetector.detect()
+# if __name__ == "__main__":
+#     main()
 
 
 ##############################

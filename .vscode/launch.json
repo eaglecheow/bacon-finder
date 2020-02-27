@@ -4,11 +4,19 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
-            "name": "Python: Module",
+            "name": "Run Test.py",
             "type": "python",
             "request": "launch",
             "module": "test"
+        },
+        {
+            "name": "Extract Recorded Sensor Data",
+            "type": "python",
+            "args": ["sensorData.log"],
+            "request": "launch",
+            "module": "dataExtractor"
         },
         {
             "name": "Python: Current File",

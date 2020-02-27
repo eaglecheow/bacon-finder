@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "port": "COM10",
+    "programmer": "AVR ISP",
+    "sketch": "arduino\\SensorTest\\SensorTest.ino"
+}

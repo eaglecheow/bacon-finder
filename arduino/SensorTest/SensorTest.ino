@@ -3,6 +3,8 @@ const int pinAccY = A1;
 const int pinAccZ = A2;
 const int pinShockSensor = A3;
 
+const int currentTime = 0;
+
 void setup()
 {
   // put your setup code here, to run once:
@@ -12,10 +14,15 @@ void setup()
   pinMode(pinAccY, INPUT);
   pinMode(pinAccZ, INPUT);
   pinMode(pinShockSensor, INPUT);
+
+  Serial.print("//");
+  Serial.print(millis());
+  Serial.println("//");
 }
 
 void loop()
 {
+
   // put your main code here, to run repeatedly:
 
   // For Arduino Serial Plotter
@@ -28,6 +35,7 @@ void loop()
   // Serial.println(analogRead(pinShockSensor));
 
   // For Python Code
+
   Serial.print("X:");
   Serial.print(analogRead(pinAccX));
   Serial.print(";Y:");

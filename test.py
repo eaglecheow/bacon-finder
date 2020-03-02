@@ -6,6 +6,11 @@ from raspi.detection.AccidentDetector import ImageBasedDetector, SensorBasedDete
 import sys
 import json
 import logging
+import time
+import cv2
+import dlib
+import re
+from raspi.utils.datapresentation.GraphPlotter import GraphPlotter
 
 ############################
 # Test for Eyelid Detector #
@@ -65,26 +70,84 @@ import logging
 # print(data["detectionConfig"]["imageDetectionConfig"]["eyelidDetectionConfig"]["faceModelFilePath"])
 
 
-###################################
-# Test for Sensor Based Detection #
-###################################
+#############################################
+# Test for Sensor Based Detection Recording #
+#############################################
 
+
+# def main():
+#     print("Process Start")
+#     logging.basicConfig(level=logging.DEBUG, filename="sensorData.log")
+#     imageWindow = dlib.image_window()
+
+#     with open("config.json") as jasonFile:
+#         config = json.load(jasonFile)
+
+#     sensorDetector = SensorBasedDetector(
+#         config["detectionConfig"]["sensorDetectionConfig"]
+#     )
+
+#     camera = Camera(CameraType.WEB_CAM, config["generalConfig"]["camera"])
+
+#     initialTime = 0
+
+#     while True:
+
+#         currentTime = int(time.time() * 1000)
+#         if initialTime == 0:
+#             initialTime = currentTime
+
+#         timeLapsed = currentTime - initialTime
+
+#         logString = sensorDetector.readValue()
+
+#         frame = camera.takeFrame()
+#         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#         cv2.putText(frame, str(timeLapsed), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255))
+
+#         imageWindow.set_image(frame)
+
+#         cv2.imwrite("outImg/{}.jpg".format(timeLapsed), frame)
+
+#         # logging.debug(logString)
+#         print(logString)
+#         time.sleep(0.05)
+        
+
+
+
+# if __name__ == "__main__":
+#     main()
+
+
+
+###########################
+# Another logging attempt #
+###########################
 
 def main():
     print("Process Start")
     logging.basicConfig(level=logging.DEBUG, filename="sensorData.log")
 
-    with open("config.json") as jasonFile:
-        config = json.load(jasonFile)
+    with open("config.json") as jsonFile:
+        config = json.load(jsonFile)
 
-    sensorDetector = SensorBasedDetector(
-        config["detectionConfig"]["sensorDetectionConfig"]
-    )
+    sensorDetector = SensorBasedDetector(config["detectionConfig"]["sensorDetectionConfig"])
+
+    initPattern = r"//\d+//"
+    initTime = 0
 
     while True:
-        logging.debug(sensorDetector.readValue())
+        data = sensorDetector.readValue()
+        foundPattern = re.findall(initPattern, data)
+        if len(foundPattern) == 1:
+            initTime = int(foundPattern[0].replace("//", ""))
+            break
+        else:
+            print(data)
+
+    print("Break out")
 
 
 if __name__ == "__main__":
     main()
-

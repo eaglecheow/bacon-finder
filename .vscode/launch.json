@@ -4,7 +4,12 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
+        {
+            "name": "Combine Video",
+            "type": "python",
+            "request": "launch",
+            "module": "videoMaker"
+        },
         {
             "name": "Run Test.py",
             "type": "python",
@@ -14,7 +19,9 @@
         {
             "name": "Extract Recorded Sensor Data",
             "type": "python",
-            "args": ["sensorData.log"],
+            "args": [
+                "sensorData.log"
+            ],
             "request": "launch",
             "module": "dataExtractor"
         },

@@ -51,6 +51,14 @@ def main():
 
     serial = SerialHelper("/dev/ttyS0")
 
+    while True:
+        serial.sendLine("at")
+        try:
+            serial.waitMessage("OK", 1000)
+
+        except:
+            print("Retrying on baud rate correction...")
+
     gpsHelper = GPSHelper(serial)
     gpsData = gpsHelper.getGPSLocation()
     print("GPS Data: {}{}, {}{}".format(gpsData.latitude, gpsData.latitudeDirection, gpsData.longitude, gpsData.longitudeDirection))

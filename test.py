@@ -51,13 +51,13 @@ def main():
 
     serial = SerialHelper("COM4")
 
-    while True:
-        serial.sendLine("at")
-        try:
-            serial.waitMessage("OK", 1000)
+    # while True:
+    #     serial.sendLine("at")
+    #     try:
+    #         serial.waitMessage("OK", 1000)
 
-        except:
-            print("Retrying on baud rate correction...")
+    #     except:
+    #         print("Retrying on baud rate correction...")
 
     gpsHelper = GPSHelper(serial)
     gpsData = gpsHelper.getGPSLocation()

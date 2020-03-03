@@ -11,6 +11,9 @@ import cv2
 import dlib
 import re
 from raspi.utils.datapresentation.GraphPlotter import GraphPlotter
+from raspi.gps.GPSHelper import GPSHelper
+from raspi.gps.GPSObject import GPSObject
+from raspi.utils.SerialHelper import SerialHelper
 
 ############################
 # Test for Eyelid Detector #
@@ -36,6 +39,24 @@ from raspi.utils.datapresentation.GraphPlotter import GraphPlotter
 
 # while True:
 #     print("IsStatic: {}".format(staticDetector.detectStatic()))
+
+
+
+########################
+# Test for GPS Reading #
+########################
+
+def main():
+    print("GPS Test")
+
+    serial = SerialHelper("COM4")
+
+    gpsHelper = GPSHelper(serial)
+    gpsData = gpsHelper.getGPSLocation()
+    print("GPS Data: {}{}, {}{}".format(gpsData.latitude, gpsData.latitudeDirection, gpsData.longitude, gpsData.longitudeDirection))
+
+if __name__ == "__main__":
+    main()
 
 
 ####################################
@@ -125,29 +146,29 @@ from raspi.utils.datapresentation.GraphPlotter import GraphPlotter
 # Another logging attempt #
 ###########################
 
-def main():
-    print("Process Start")
-    logging.basicConfig(level=logging.DEBUG, filename="sensorData.log")
+# def main():
+#     print("Process Start")
+#     logging.basicConfig(level=logging.DEBUG, filename="sensorData.log")
 
-    with open("config.json") as jsonFile:
-        config = json.load(jsonFile)
+#     with open("config.json") as jsonFile:
+#         config = json.load(jsonFile)
 
-    sensorDetector = SensorBasedDetector(config["detectionConfig"]["sensorDetectionConfig"])
+#     sensorDetector = SensorBasedDetector(config["detectionConfig"]["sensorDetectionConfig"])
 
-    initPattern = r"//\d+//"
-    initTime = 0
+#     initPattern = r"//\d+//"
+#     initTime = 0
 
-    while True:
-        data = sensorDetector.readValue()
-        foundPattern = re.findall(initPattern, data)
-        if len(foundPattern) == 1:
-            initTime = int(foundPattern[0].replace("//", ""))
-            break
-        else:
-            print(data)
+#     while True:
+#         data = sensorDetector.readValue()
+#         foundPattern = re.findall(initPattern, data)
+#         if len(foundPattern) == 1:
+#             initTime = int(foundPattern[0].replace("//", ""))
+#             break
+#         else:
+#             print(data)
 
-    print("Break out")
+#     print("Break out")
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

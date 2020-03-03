@@ -55,6 +55,7 @@ def main():
         serial.sendLine("at")
         try:
             serial.waitMessage("OK", 1000)
+            break;
 
         except:
             print("Retrying on baud rate correction...")

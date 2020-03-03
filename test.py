@@ -55,12 +55,15 @@ def main():
         serial.sendLine("at")
         try:
             serial.waitMessage("OK", 1000)
+            print("Baud rate sync-ed")
             break;
 
         except:
             print("Retrying on baud rate correction...")
 
+    print("Setting up GPS Helper...")
     gpsHelper = GPSHelper(serial)
+    print("Getting GPS location...")
     gpsData = gpsHelper.getGPSLocation()
     print("GPS Data: {}{}, {}{}".format(gpsData.latitude, gpsData.latitudeDirection, gpsData.longitude, gpsData.longitudeDirection))
 

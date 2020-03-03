@@ -52,15 +52,12 @@ class GPSHelper:
         if self.isOpen == True:
             return
 
+        # try:
+        #     self.serialObj.waitPattern("GGA", 2000)
+        # except Exception:
         messagePair = [["AT+CGNSPWR=1", "OK"], ["AT+CGNSTST=1", "OK"]]
 
-        # self.serialObj.sendLine("AT+CGNSPWR=1")
-
-        # self.serialObj.waitMessage(
-        #     "OK", errorMessage="[GPS] Unable to get OK response from device"
-        # )
-
-        # self.serialObj.sendLine("AT+CGNSTST=1")
+        self.serialObj.communicate(messagePair)
 
         while True:
 

@@ -72,6 +72,8 @@ class GPSHelper:
 
             gpsObject = GPSObject()
 
+            if responseData[2] != "":
+                responseData[2] = responseData[2][0:-5]
             gpsObject.timeStamp = int(responseData[2])
             gpsObject.latitude = abs(float(responseData[3]))
             if float(responseData[3]) >= 0:
@@ -85,6 +87,14 @@ class GPSHelper:
                 gpsObject.longitudeDirection = "W"
             gpsObject.altitude = float(responseData[5])
             gpsObject.altitudeUnits = "M"
+
+            if responseData[14] == "":
+                responseData[14] = "0"
+            if responseData[15] == "":
+                responseData[15] = "0"
+            if responseData[16] == "":
+                responseData[16] = "0"
+
             gpsObject.satelliteAmount = int(responseData[14]) + int(responseData[15]) + int(responseData[16])
 
             if gpsObject.checkDataValidity() == True:

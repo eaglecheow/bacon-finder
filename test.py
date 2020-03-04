@@ -49,7 +49,8 @@ from raspi.utils.SerialHelper import SerialHelper
 def main():
     print("GPS Test")
 
-    serial = SerialHelper("COM4")
+    serial = SerialHelper("/dev/ttyS0")
+    logging.basicConfig(level=logging.DEBUG, filename="gpsPath.log")
 
     while True:
         serial.sendLine("at")
@@ -64,8 +65,14 @@ def main():
     print("Setting up GPS Helper...")
     gpsHelper = GPSHelper(serial)
     print("Getting GPS location...")
-    gpsData = gpsHelper.getGPSLocation2()
-    print("GPS Data: {}{}, {}{}".format(gpsData.latitude, gpsData.latitudeDirection, gpsData.longitude, gpsData.longitudeDirection))
+    while True:
+        gpsData = gpsHelper.getGPSLocation2()
+
+        message = "{}{}, {}{}".format(gpsData.latitude, gpsData.latitudeDirection, gpsData.longitude, gpsData.longitudeDirection)
+
+        print(message)
+        logging.debug(message)
+
 
 if __name__ == "__main__":
     main()

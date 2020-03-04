@@ -49,7 +49,7 @@ from raspi.utils.SerialHelper import SerialHelper
 def main():
     print("GPS Test")
 
-    serial = SerialHelper("/dev/ttyS0")
+    serial = SerialHelper("COM4")
 
     while True:
         serial.sendLine("at")
@@ -64,7 +64,7 @@ def main():
     print("Setting up GPS Helper...")
     gpsHelper = GPSHelper(serial)
     print("Getting GPS location...")
-    gpsData = gpsHelper.getGPSLocation()
+    gpsData = gpsHelper.getGPSLocation2()
     print("GPS Data: {}{}, {}{}".format(gpsData.latitude, gpsData.latitudeDirection, gpsData.longitude, gpsData.longitudeDirection))
 
 if __name__ == "__main__":

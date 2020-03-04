@@ -45,6 +45,55 @@ class GPSHelper:
 
         return gpsObject
 
+    def getGPSLocation2(self, timeout=10000):
+
+        startTime = time.time() * 1000
+
+        messagePair = [["AT+CGNSPWR=1", "OK"]]
+
+        self.serialObj.communicate(messagePair)
+
+        while True:
+            time.sleep(1)
+            self.serialObj.sendLine("AT+CGNSINF")
+
+            while True:
+                responseString = self.serialObj.readLine()
+                if "+CGNSINF:" in responseString:
+                    break
+
+            responseString = responseString.replace("+CGNSINF:", "")
+
+            responseData = responseString.split(",")
+
+            # Invalid GPS
+            if responseData[2] == "":
+                continue
+
+            gpsObject = GPSObject()
+
+            gpsObject.timeStamp = int(responseData[2])
+            gpsObject.latitude = abs(float(responseData[3]))
+            if float(responseData[3]) >= 0:
+                gpsObject.latitudeDirection = "N"
+            else:
+                gpsObject.latitudeDirection = "S"
+            gpsObject.longitude = abs(float(responseData[4]))
+            if float(responseData[4]) >= 0:
+                gpsObject.longitudeDirection = "E"
+            else:
+                gpsObject.longitudeDirection = "W"
+            gpsObject.altitude = float(responseData[5])
+            gpsObject.altitudeUnits = "M"
+            gpsObject.satelliteAmount = int(responseData[14]) + int(responseData[15]) + int(responseData[16])
+
+            if gpsObject.checkDataValidity() == True:
+                return gpsObject
+            elif ((time.time() * 1000) - startTime) > timeout:
+                raise Exception("[GPS] Timeout while getting GPS location")
+            else:
+                continue
+
     def getGPSLocation(self, timeout=10000):
 
         startTime = time.time() * 1000

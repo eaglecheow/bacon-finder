@@ -12,7 +12,7 @@ class SerialHelper:
 
         self.port = port
         self.baudRate = baudRate
-        self.serialObject = serial.Serial(port, baudRate, xonxoff=0, rtscts=0)
+        self.serialObject = serial.Serial(port, baudRate, xonxoff=0, rtscts=0, timeout=1, write_timeout=1)
 
         if doNotOpen == False:
             self.openSerial()
@@ -39,6 +39,7 @@ class SerialHelper:
         if self.serialObject.is_open == False:
             raise Exception("[Serial] Trying to read data with closed serial")
 
+        
         returnMessage = self.serialObject.readline().decode().strip("\r\n")
         print("[{}] {}".format(datetime.datetime.now().time(), returnMessage))
 

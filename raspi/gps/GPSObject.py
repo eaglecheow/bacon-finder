@@ -9,18 +9,10 @@ class GPSObject:
         self.longitudeDirection: str = None
         self.altitude: float = None
         self.altitudeUnits: str = None
+        self.speed: float = None
         self.satelliteAmount: int = 0
 
     def checkDataValidity(self) -> bool:
-        if (
-            not self.timeStamp
-            or not self.latitude
-            or not self.latitudeDirection
-            or not self.longitude
-            or not self.longitudeDirection
-            or not self.altitude
-            or not self.altitudeUnits
-            or not self.satelliteAmount
-        ):
+        if not self.timeStamp:
             return False
         return True

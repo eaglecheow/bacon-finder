@@ -2,8 +2,12 @@ import cv2
 import numpy as np
 import os
 from os.path import isfile, join
+import sys
 
-imageDirectory = "outImg/"
+if sys.argv[1]:
+    imageDirectory = sys.argv[1]
+else:
+    imageDirectory = "outImg/"
 
 frameArray = []
 fileArray = [frame for frame in os.listdir(imageDirectory) if isfile(join(imageDirectory, frame))]
@@ -14,10 +18,10 @@ for i in range(len(fileArray)):
     filename = imageDirectory + fileArray[i]
     img = cv2.imread(filename)
 
-    if img.shape == None:
+    try:
+        height, width, layers = img.shape
+    except:
         continue
-
-    height, width, layers = img.shape
     size = (width, height)
     print(filename)
     frameArray.append(img)

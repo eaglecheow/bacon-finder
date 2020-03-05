@@ -18,6 +18,11 @@ class SensorBasedDetector:
     def readValue(self):
         return self.serialReader.readLine()
 
+    def detect(self) -> bool:
+
+        # TODO: Perform checking on collision
+        return False
+
 
 class ImageBasedDetector:
     def __init__(

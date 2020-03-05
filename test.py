@@ -66,7 +66,7 @@ def main():
     gpsHelper = GPSHelper(serial)
     print("Getting GPS location...")
     while True:
-        gpsData = gpsHelper.getGPSLocation2()
+        gpsData = gpsHelper.getGPSLocation()
 
         message = "{}{}, {}{}".format(gpsData.latitude, gpsData.latitudeDirection, gpsData.longitude, gpsData.longitudeDirection)
 

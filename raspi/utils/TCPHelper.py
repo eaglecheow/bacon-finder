@@ -30,7 +30,7 @@ class TCPHelper:
             ["AT+CIICR", "OK"],
             ["AT+CIFSR", r"[REGEX]\d+\.\d+\.\d+\.\d+"],
             [
-                'AT+CIPSTART="TCP","{}","{}"'.format(self.hostIP, self.portNumber),
+                r'AT+CIPSTART="TCP","{}","{}"'.format(self.hostIP, self.portNumber),
                 "CONNECT OK",
             ],
             ["AT+CIPSPRT=0", "OK"],
@@ -48,10 +48,10 @@ class TCPHelper:
         self.serialObj.sendLine("AT+CIPSEND")
 
         # This line adds a buffer time for the data to be sent properly
-        time.sleep(0.01)
-
+        time.sleep(0.1)
         self.serialObj.sendLine(message)
         self.serialObj.sendCtrlZ()
+        
 
         self.serialObj.communicate([["[EMPTY]", "SEND OK"]])
 
@@ -63,3 +63,12 @@ class TCPHelper:
         self.serialObj.waitMessage(
             expectedMessage, errorMessage="[TCP] Unable to get expected message"
         )
+
+    def readMessage(self):
+        
+        message = ""
+
+        while message == "":
+            message = self.serialObj.readLine()
+
+        return message

@@ -12,7 +12,7 @@ class SerialHelper:
 
         self.port = port
         self.baudRate = baudRate
-        self.serialObject = serial.Serial(port, baudRate, xonxoff=0, rtscts=0, timeout=1, write_timeout=1)
+        self.serialObject = serial.Serial(port, baudRate, xonxoff=0, rtscts=0, timeout=2, write_timeout=2)
 
         if doNotOpen == False:
             self.openSerial()
@@ -110,6 +110,8 @@ class SerialHelper:
             readSuccess = False
 
             while readSuccess == False:
+
+                time.sleep(0.2)
 
                 try:
                     if messageToExpect.startswith("[REGEX]"):

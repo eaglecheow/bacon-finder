@@ -89,7 +89,7 @@ def main():
     while True:
         serial.sendLine("at")
         try:
-            serial.waitMessage("OK", 1000)
+            serial.waitMessage("OK", 2000)
             print("Baud rate sync-ed")
             break;
 
@@ -97,9 +97,19 @@ def main():
             print("Retrying on baud rate correction...")
 
 
-    tcpHelper = TCPHelper(serial, "35.234.201.162", 8080, "celcom2g")
+    tcpHelper = TCPHelper(serial, "35.234.201.162", 8200, "celcom2g")
     tcpHelper.initializeDevice()
-    tcpHelper.sendMessage("Hello World")
+    tcpHelper.sendMessage("May the force be with you")
+    tcpHelper.sendMessage("So this is something")
+    tcpHelper.sendMessage("It's actually working")
+    tcpHelper.sendMessage("So cheers")
+    tcpHelper.sendMessage("Still can't believe it's actually working")
+    tcpHelper.sendMessage("But somehow, it works")
+
+    while True:
+        message = tcpHelper.readMessage()
+        print(message)
+        time.sleep(0.1)
 
 
 if __name__ == "__main__":

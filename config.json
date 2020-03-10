@@ -24,7 +24,7 @@
         },
         "sensorDetectionConfig": {
             "generalConfig": {
-                "arduinoSerialPort": "COM10",
+                "arduinoSerialPort": "/dev/ttyACM0",
                 "arduinoBaudRate": 9600
             }
         }

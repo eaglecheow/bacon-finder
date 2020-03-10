@@ -21,7 +21,7 @@ def main():
 
         currentTime = int(time.time() * 1000)
 
-        cv2.putText(image, str(currentTime), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255))
+        cv2.putText(image, str(currentTime), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
 
         imageWindow.set_image(image)
 

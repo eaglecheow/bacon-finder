@@ -14,6 +14,7 @@ from raspi.utils.datapresentation.GraphPlotter import GraphPlotter
 from raspi.gps.GPSHelper import GPSHelper
 from raspi.gps.GPSObject import GPSObject
 from raspi.utils.SerialHelper import SerialHelper
+from raspi.utils.TCPHelper import TCPHelper
 
 ############################
 # Test for Eyelid Detector #
@@ -46,11 +47,44 @@ from raspi.utils.SerialHelper import SerialHelper
 # Test for GPS Reading #
 ########################
 
-def main():
-    print("GPS Test")
+# def main():
+#     print("GPS Test")
 
+#     serial = SerialHelper("/dev/ttyS0")
+#     logging.basicConfig(level=logging.DEBUG, filename="gpsPath.log")
+
+#     while True:
+#         serial.sendLine("at")
+#         try:
+#             serial.waitMessage("OK", 1000)
+#             print("Baud rate sync-ed")
+#             break;
+
+#         except:
+#             print("Retrying on baud rate correction...")
+
+#     print("Setting up GPS Helper...")
+#     gpsHelper = GPSHelper(serial)
+#     print("Getting GPS location...")
+#     while True:
+#         gpsData = gpsHelper.getGPSLocation()
+
+#         message = "{}{}, {}{}".format(gpsData.latitude, gpsData.latitudeDirection, gpsData.longitude, gpsData.longitudeDirection)
+
+#         print(message)
+#         logging.debug(message)
+
+
+# if __name__ == "__main__":
+#     main()
+
+
+##############################
+# Test for TCP/IP Connection #
+##############################
+
+def main():
     serial = SerialHelper("/dev/ttyS0")
-    logging.basicConfig(level=logging.DEBUG, filename="gpsPath.log")
 
     while True:
         serial.sendLine("at")
@@ -62,20 +96,14 @@ def main():
         except:
             print("Retrying on baud rate correction...")
 
-    print("Setting up GPS Helper...")
-    gpsHelper = GPSHelper(serial)
-    print("Getting GPS location...")
-    while True:
-        gpsData = gpsHelper.getGPSLocation()
 
-        message = "{}{}, {}{}".format(gpsData.latitude, gpsData.latitudeDirection, gpsData.longitude, gpsData.longitudeDirection)
-
-        print(message)
-        logging.debug(message)
+    tcpHelper = TCPHelper(serial, "35.234.201.162", 8080, "celcom2g")
+    tcpHelper.initializeDevice()
+    tcpHelper.sendMessage("Hello World")
 
 
 if __name__ == "__main__":
-    main()
+    main() 
 
 
 ####################################

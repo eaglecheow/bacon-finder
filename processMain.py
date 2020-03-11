@@ -1,15 +1,15 @@
-from twisted.internet.protocol import Factory, Protocol
+from twisted.internet.protocol import Factory, Protocol, DatagramProtocol
 from twisted.internet.endpoints import TCP4ServerEndpoint
 from twisted.internet import reactor
 
 from enum import Enum
 
 class ProcessState(Enum):
-    DETECT_INIT = 0,
-    DETECT_START = 1,
-    SENSOR_TRIGGER = 2,
-    GPS_TRIGGER = 3,
-    CAMERA_TRIGGER = 4,
+    DETECT_INIT = 0
+    DETECT_START = 1
+    SENSOR_TRIGGER = 2
+    GPS_TRIGGER = 3
+    CAMERA_TRIGGER = 4
     ACCIDENT_REPORT = 5
 
 
@@ -28,10 +28,12 @@ class TCPServer(Protocol):
                 self.sensorInitStatus[0] = 1
             elif "CAMERA" in receivedData:
                 self.sensorInitStatus[1] = 1
-
+            elif "GPS" in receivedData:
+                self.sensorInitStatus[2] = 1
+            
             print(self.sensorInitStatus)
 
-            if self.sensorInitStatus[0] == 1 and self.sensorInitStatus[1] == 1:
+            if self.sensorInitStatus[0] == 1 and self.sensorInitStatus[1] == 1 and self.sensorInitStatus[2] == 1:
                 self.currentState = ProcessState.DETECT_START
 
         elif self.currentState == ProcessState.DETECT_START:
@@ -41,8 +43,14 @@ class TCPServer(Protocol):
                 
         elif self.currentState == ProcessState.SENSOR_TRIGGER:
             print("State: Sensor triggered")
+            if "GPS" in receivedData and "TRUE" in receivedData:
+                self.currentState = ProcessState.GPS_TRIGGER
+
         elif self.currentState == ProcessState.GPS_TRIGGER:
             print("State: GPS Triggered")
+            if "CAMERA" in receivedData and "TRUE" in receivedData:
+                self.currentState = ProcessState.CAMERA_TRIGGER
+
         elif self.currentState == ProcessState.CAMERA_TRIGGER:
             print("State: Camera Triggered")
         elif self.currentState == ProcessState.ACCIDENT_REPORT:
@@ -52,13 +60,14 @@ class TCPServer(Protocol):
 
 class TCPServerFactory(Factory):
 
-    def __init__(self):
-        self.state = ProcessState.DETECT_INIT
-        self.sensorInitStatus = [0, 0]
+    def __init__(self, state):
+        self.currentState = state
+        self.sensorInitStatus = [0, 0, 0]
 
     def buildProtocol(self, addr):
-        return TCPServer(self.state, self.sensorInitStatus)
+        return TCPServer(self.currentState, self.sensorInitStatus)
 
+state = ProcessState.DETECT_INIT
 endpoint = TCP4ServerEndpoint(reactor, 8080)
-endpoint.listen(TCPServerFactory())
+endpoint.listen(TCPServerFactory(state))
 reactor.run()

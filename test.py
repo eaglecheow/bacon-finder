@@ -47,73 +47,73 @@ from raspi.utils.TCPHelper import TCPHelper
 # Test for GPS Reading #
 ########################
 
-# def main():
-#     print("GPS Test")
-
-#     serial = SerialHelper("/dev/ttyS0")
-#     logging.basicConfig(level=logging.DEBUG, filename="gpsPath.log")
-
-#     while True:
-#         serial.sendLine("at")
-#         try:
-#             serial.waitMessage("OK", 1000)
-#             print("Baud rate sync-ed")
-#             break;
-
-#         except:
-#             print("Retrying on baud rate correction...")
-
-#     print("Setting up GPS Helper...")
-#     gpsHelper = GPSHelper(serial)
-#     print("Getting GPS location...")
-#     while True:
-#         gpsData = gpsHelper.getGPSLocation()
-
-#         message = "{}{}, {}{}".format(gpsData.latitude, gpsData.latitudeDirection, gpsData.longitude, gpsData.longitudeDirection)
-
-#         print(message)
-#         logging.debug(message)
-
-
-# if __name__ == "__main__":
-#     main()
-
-
-##############################
-# Test for TCP/IP Connection #
-##############################
-
 def main():
+    print("GPS Test")
+
     serial = SerialHelper("/dev/ttyS0")
+    # logging.basicConfig(level=logging.DEBUG, filename="gpsPath.log")
 
     while True:
         serial.sendLine("at")
         try:
-            serial.waitMessage("OK", 2000)
+            serial.waitMessage("OK", 1000)
             print("Baud rate sync-ed")
             break;
 
         except:
             print("Retrying on baud rate correction...")
 
-
-    tcpHelper = TCPHelper(serial, "35.234.201.162", 8200, "celcom2g")
-    tcpHelper.initializeDevice()
-    tcpHelper.sendMessage("May the force be with you")
-    tcpHelper.sendMessage("So this is something")
-    tcpHelper.sendMessage("It's actually working")
-    tcpHelper.sendMessage("So cheers")
-    tcpHelper.sendMessage("Still can't believe it's actually working")
-    tcpHelper.sendMessage("But somehow, it works")
-
+    print("Setting up GPS Helper...")
+    gpsHelper = GPSHelper(serial)
+    print("Getting GPS location...")
     while True:
-        message = tcpHelper.readMessage()
+        gpsData = gpsHelper.getGPSLocation()
+
+        message = "Speed: {}".format(gpsData.speed)
+
         print(message)
-        time.sleep(0.1)
+        # logging.debug(message)
 
 
 if __name__ == "__main__":
-    main() 
+    main()
+
+
+##############################
+# Test for TCP/IP Connection #
+##############################
+
+# def main():
+#     serial = SerialHelper("/dev/ttyS0")
+
+#     while True:
+#         serial.sendLine("at")
+#         try:
+#             serial.waitMessage("OK", 2000)
+#             print("Baud rate sync-ed")
+#             break;
+
+#         except:
+#             print("Retrying on baud rate correction...")
+
+
+#     tcpHelper = TCPHelper(serial, "35.234.201.162", 8200, "celcom2g")
+#     tcpHelper.initializeDevice()
+#     tcpHelper.sendMessage("May the force be with you")
+#     tcpHelper.sendMessage("So this is something")
+#     tcpHelper.sendMessage("It's actually working")
+#     tcpHelper.sendMessage("So cheers")
+#     tcpHelper.sendMessage("Still can't believe it's actually working")
+#     tcpHelper.sendMessage("But somehow, it works")
+
+#     while True:
+#         message = tcpHelper.readMessage()
+#         print(message)
+#         time.sleep(0.1)
+
+
+# if __name__ == "__main__":
+#     main() 
 
 
 ####################################

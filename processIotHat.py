@@ -49,7 +49,7 @@ def main():
         sensorSocket.send("GPS:TRUE;10N,10E;".encode())
         time.sleep(1)
         
-        recvData = sensorSocket.recv().decode()
+        recvData = sensorSocket.recv(1024).decode()
         if "Accident detected!" in recvData:
             tcpHelper.sendMessage("Accident Detected")
 

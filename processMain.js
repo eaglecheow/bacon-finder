@@ -27,6 +27,7 @@ let server = net.createServer(socket => {
     socket.on("data", data => {
         //TODO: Write data processing stuff
         let receivedData = data.toString();
+	console.log(receivedData);
         switch (currentState) {
             case STATE.DETECT_INIT:
                 console.log("Current State: Detect Init");
@@ -94,7 +95,9 @@ let server = net.createServer(socket => {
                 socket.write(iothatMessageToSend);
                 iothatIsMessageAvailable = false;
                 iothatMessageToSend = "";
-            }
+            } else {
+		socket.write("EMPTY");
+	    }
         }
     });
 

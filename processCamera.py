@@ -13,11 +13,11 @@ def main():
     with open("config.json") as jsonFile:
         config = json.load(jsonFile)
 
-    # imageDetector = ImageBasedDetector(
-    #     CameraType.WEB_CAM,
-    #     config["detectionConfig"]["imageDetectionConfig"],
-    #     config["generalConfig"]["camera"],
-    # )
+    imageDetector = ImageBasedDetector(
+        CameraType.WEB_CAM,
+        config["detectionConfig"]["imageDetectionConfig"],
+        config["generalConfig"]["camera"],
+    )
 
     host = "127.0.0.1"
     port = 8080
@@ -28,10 +28,10 @@ def main():
     while True:
 
         # FOR DEBUG PURPOSE ONLY #
-        imageDetector = None
-        sensorSocket.send("CAMERA:TRUE".encode())
-        time.sleep(1)
-        continue
+        # imageDetector = None
+        # sensorSocket.send("CAMERA:TRUE".encode())
+        # time.sleep(1)
+        # continue
 
         # END OF DEBUG BLOCK #
 
@@ -41,7 +41,7 @@ def main():
         else:
             message = "CAMERA:FALSE\n\r"
         sensorSocket.send(message.encode())
-        time.sleep(1)
+        time.sleep(0.1)
 
 
 if __name__ == "__main__":

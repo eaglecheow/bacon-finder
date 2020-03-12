@@ -5,7 +5,6 @@ import json
 
 from raspi.detection.AccidentDetector import SensorBasedDetector
 
-
 def main():
     print("Starting Sensor Process")
 
@@ -26,9 +25,9 @@ def main():
 
         # FOR DEBUG PURPOSE ONLY #
 
-        sensorSocket.send("SENSOR:TRUE".encode())
-        time.sleep(1)
-        continue
+        # sensorSocket.send("SENSOR:TRUE".encode())
+        # time.sleep(1)
+        # continue
 
         # END OF DEBUG BLOCK #
 
@@ -38,7 +37,7 @@ def main():
         else:
             message = "SENSOR:FALSE\n\r"
         sensorSocket.send(message.encode())
-        time.sleep(1)
+        # time.sleep(0.1)
 
 
 if __name__ == "__main__":

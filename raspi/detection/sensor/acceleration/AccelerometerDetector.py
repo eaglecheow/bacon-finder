@@ -7,7 +7,6 @@ import time
 class AccelerometerDetector:
     def __init__(self, accMeterConfig):
         super().__init__()
-
         self.resultantThreshold = accMeterConfig["resultantThreshold"]
         self.minTimingThreshold = accMeterConfig["minTimingThreshold"]
         self.maxTimingThreshold = accMeterConfig["maxTimingThreshold"]

@@ -70,6 +70,11 @@ def main():
             speedStopTime = int(time.time() * 1000)
             message = "GPS:FALSE;{};\n\r".format(locationString)
         sensorSocket.send(message.encode())
+
+        recvData = sensorSocket.recv(1024).decode()
+        if "Accident detected!" in recvData:
+            tcpHelper.sendMessage("Accident Detected")
+            
         time.sleep(1)
 
 

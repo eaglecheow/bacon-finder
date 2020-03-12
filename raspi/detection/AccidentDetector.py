@@ -33,7 +33,7 @@ class SensorBasedDetector:
     def detect(self) -> bool:
 
         rawData = self.readValue()
-        sensorValuePattern = r"\[\d+\]X:\d+;Y:\d+;Z:\d+;V:\d+;"
+        sensorValuePattern = r"X:\d+;Y:\d+;Z:\d+;V:\d+;"
         foundPattern = re.findall(sensorValuePattern, rawData)
         if len(foundPattern) >= 1:
             content = foundPattern[0]
@@ -52,7 +52,6 @@ class SensorBasedDetector:
             y = int(foundY.replace("Y:", "").replace(";", ""))
             z = int(foundZ.replace("Z:", "").replace(";", ""))
             v = int(foundV.replace("V:", "").replace(";", ""))
-
             accDetection = self.accDetector.detect(x, y, z)
             return accDetection
 

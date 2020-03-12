@@ -10,7 +10,7 @@
     "detectionConfig": {
         "imageDetectionConfig": {
             "eyelidDetectionConfig": {
-                "faceModelFilePath": "C:\\\\Users\\user\\Desktop\\Dev\\Research\\dlibTest\\trained_model\\shape_predictor_68_face_landmarks.dat",
+                "faceModelFilePath": "./resource/shape_predictor_68_face_landmarks.dat",
                 "faceAbsenceTimeout": 100000,
                 "eyelidMovementTimeout": 10000,
                 "frameTimeTimeout": 5000,
@@ -24,11 +24,11 @@
         },
         "sensorDetectionConfig": {
             "generalConfig": {
-                "arduinoSerialPort": "/dev/ttyACM0",
+                "arduinoSerialPort": "COM10",
                 "arduinoBaudRate": 9600
             },
             "accelerometerDetectionConfig": {
-                "resultantThreshold": 20,
+                "resultantThreshold": 50,
                 "minTimingThreshold": 100,
                 "maxTimingThreshold": 1000
             }

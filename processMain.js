@@ -15,6 +15,9 @@ const STATE = {
 let currentState = STATE.DETECT_INIT;
 let sensorInitStatus = [0, 0, 0];
 
+let iothatMessageToSend = "";
+let iothatIsMessageAvailable = false;
+
 let server = net.createServer(socket => {
 
     socket.on("connect", () => {
@@ -72,6 +75,11 @@ let server = net.createServer(socket => {
 
             case STATE.CAMERA_TRIGGER:
                 console.log("Current State: Camera Triggered");
+
+                iothatMessageToSend = "Accident detected!";
+                iothatIsMessageAvailable = true;
+
+                currentState = STATE.ACCIDENT_REPORT;
                 break;
 
             case STATE.ACCIDENT_REPORT:
@@ -79,6 +87,14 @@ let server = net.createServer(socket => {
         
             default:
                 break;
+        }
+
+        if (receivedData.indexOf("GPS") > -1) {
+            if (iothatIsMessageAvailable === true) {
+                socket.write(iothatMessageToSend);
+                iothatIsMessageAvailable = false;
+                iothatMessageToSend = "";
+            }
         }
     });
 
@@ -91,3 +107,5 @@ let server = net.createServer(socket => {
     });
 
 }).listen(PORT, HOST);
+
+console.log(`Raspi Process running at ${HOST}:${PORT}`);

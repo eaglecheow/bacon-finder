@@ -23,6 +23,15 @@ def main():
     sensorSocket.connect((host, port))
 
     while True:
+
+        # FOR DEBUG PURPOSE ONLY #
+
+        sensorSocket.send("SENSOR:TRUE".encode())
+        time.sleep(1)
+        continue
+
+        # END OF DEBUG BLOCK #
+
         sensorResult = sensorDetector.detect()
         if sensorResult == True:
             message = "SENSOR:TRUE\n\r"

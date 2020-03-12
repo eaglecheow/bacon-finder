@@ -26,6 +26,20 @@
             "generalConfig": {
                 "arduinoSerialPort": "/dev/ttyACM0",
                 "arduinoBaudRate": 9600
+            },
+            "accelerometerDetectionConfig": {
+                "resultantThreshold": 20,
+                "minTimingThreshold": 100,
+                "maxTimingThreshold": 1000
+            }
+        },
+        "gpsDetectionConfig": {
+            "generalConfig": {
+                "serialPort": "/dev/ttyS0"
+            },
+            "speedDetectionConfig": {
+                "movingSpeedThreshold": 10,
+                "movingTimeThreshold": 10000
             }
         }
     }

@@ -3,10 +3,14 @@ import re
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
+from raspi.utils.dataprocess.DataObserver import DataObserver
 
 
 inputFile = sys.argv[1]
+
+do = DataObserver()
 
 pattern = r"\[\d+\]X:\d+;Y:\d+;Z:\d+;V:\d+;"
 
@@ -47,13 +51,25 @@ for line in fileContent:
 
 # initialTime = timeList[0]
 
+sumList = []
+sdList = []
+
+for i in range(len(dataListX)):
+    resultant = math.sqrt((dataListX[i] ** 2) + (dataListY[i] ** 2) + (dataListZ[i] ** 2))
+    sumList.append(resultant)
+    do.inputValue(resultant)
+    sdList.append(do.stdValue)
+
+
 t = timeList
 
 fig, ax = plt.subplots()
-ax.plot(t, dataListX, label='x')
-ax.plot(t, dataListY, label='y')
-ax.plot(t, dataListZ, label='z')
-ax.plot(t, dataListV, label='v')
+# ax.plot(t, dataListX, label='x')
+# ax.plot(t, dataListY, label='y')
+# ax.plot(t, dataListZ, label='z')
+# ax.plot(t, dataListV, label='v')
+ax.plot(t, sumList, label='sum')
+ax.plot(t, sdList, label='std')
 ax.set(xlabel='time (ms)', ylabel='data')
 ax.grid()
 ax.legend()

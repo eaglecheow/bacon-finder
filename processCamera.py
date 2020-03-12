@@ -26,6 +26,15 @@ def main():
     sensorSocket.connect((host, port))
 
     while True:
+
+        # FOR DEBUG PURPOSE ONLY #
+
+        sensorSocket.send("CAMERA:TRUE".encode())
+        time.sleep(1)
+        continue
+
+        # END OF DEBUG BLOCK #
+
         imageResult = imageDetector.detect()
         if imageResult == True:
             message = "CAMERA:TRUE\n\r"

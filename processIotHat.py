@@ -6,6 +6,7 @@ import json
 from raspi.gps.GPSHelper import GPSHelper
 from raspi.gps.GPSObject import GPSObject
 from raspi.utils.SerialHelper import SerialHelper
+from raspi.utils.TCPHelper import TCPHelper
 
 
 def main():
@@ -29,6 +30,9 @@ def main():
             print("Retrying on baud rate correction...")
 
     gpsHelper = GPSHelper(serial)
+    tcpHelper = TCPHelper(serial, "35.234.201.162", 8200, "celcom2g")
+    tcpHelper.initializeDevice()
+
 
     host = "127.0.0.1"
     port = 8080
@@ -44,6 +48,11 @@ def main():
 
         sensorSocket.send("GPS:TRUE;10N,10E;".encode())
         time.sleep(1)
+        
+        recvData = sensorSocket.recv().decode()
+        if "Accident detected!" in recvData:
+            tcpHelper.sendMessage("Accident Detected")
+
         continue
 
         # END OF DEBUG BLOCK #

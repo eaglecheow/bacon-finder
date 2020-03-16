@@ -37,7 +37,14 @@ def main():
 
         imageResult = imageDetector.detect()
         if imageResult == True:
-            message = "CAMERA:TRUE\n\r"
+            reason = imageDetector.readReason()
+            reasonString = ""
+            if reason[0] == 1:
+                reasonString += "EYELID;"
+            if reason[1] == 1:
+                reasonString += "MOVEMENT;"
+            
+            message = "CAMERA:TRUE;{}\n\r".format(reasonString)
         else:
             message = "CAMERA:FALSE\n\r"
         sensorSocket.send(message.encode())

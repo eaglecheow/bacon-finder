@@ -33,7 +33,12 @@ def main():
 
         sensorResult = sensorDetector.detect()
         if sensorResult == True:
-            message = "SENSOR:TRUE\n\r"
+            previousValues = sensorDetector.readPreviousData()["accelerometer"]
+            previousValueString = ""
+            for value in previousValues:
+                previousValueString += "{};".format(value)
+
+            message = "SENSOR:TRUE;{}\n\r".format(previousValueString)
         else:
             message = "SENSOR:FALSE\n\r"
         sensorSocket.send(message.encode())

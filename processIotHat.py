@@ -42,6 +42,8 @@ def main():
 
     speedStopTime = int(time.time() * 1000)
 
+    previousData = ["0,0,0"] * 20 # Latitude,Longitude,Speed
+
     while True:
 
         # FOR DEBUG PURPOSE ONLY #
@@ -58,17 +60,24 @@ def main():
         # END OF DEBUG BLOCK #
 
         gpsInfo = gpsHelper.getGPSLocation()
-        locationString = "{}{},{}{}".format(gpsInfo.latitude, gpsInfo.latitudeDirection, gpsInfo.longitude, gpsInfo.longitudeDirection)
+        # locationString = "{}{},{}{}".format(gpsInfo.latitude, gpsInfo.latitudeDirection, gpsInfo.longitude, gpsInfo.longitudeDirection)
+
+        previousData = previousData[1:20] + ["{},{},{}".format(gpsInfo.latitude, gpsInfo.longitude, gpsInfo.speed)]
+
+        locationString = ""
+        for locationData in previousData:
+            locationString += "{};".format(locationData)
+
         if gpsInfo.speed < gpsConfig["speedDetectionConfig"]["movingSpeedThreshold"]:
             if (int(time.time() * 1000) - speedStopTime) > gpsConfig[
                 "speedDetectionConfig"
             ]["movingTimeThreshold"]:
-                message = "GPS:TRUE;{};\n\r".format(locationString)
+                message = "GPS:TRUE;{}\n\r".format(locationString)
             else:
-                message = "GPS:FALSE;{};\n\r".format(locationString)
+                message = "GPS:FALSE;{}\n\r".format(locationString)
         else:
             speedStopTime = int(time.time() * 1000)
-            message = "GPS:FALSE;{};\n\r".format(locationString)
+            message = "GPS:FALSE;{}\n\r".format(locationString)
         sensorSocket.send(message.encode())
 
         recvData = sensorSocket.recv(1024).decode()

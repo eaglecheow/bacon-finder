@@ -18,7 +18,13 @@ let sensorInitStatus = [0, 0, 0];
 let iothatMessageToSend = "";
 let iothatIsMessageAvailable = false;
 
-let server = net.createServer(socket => {
+let accidentData = {
+    sensor: "",
+    location: "",
+    camera: ""
+}
+
+net.createServer(socket => {
 
     socket.on("connect", () => {
         console.log(`Connected to ${socket.remoteAddress}`);
@@ -27,7 +33,7 @@ let server = net.createServer(socket => {
     socket.on("data", data => {
         //TODO: Write data processing stuff
         let receivedData = data.toString();
-	console.log(receivedData);
+        console.log(receivedData);
         switch (currentState) {
             case STATE.DETECT_INIT:
                 console.log("Current State: Detect Init");
@@ -57,6 +63,7 @@ let server = net.createServer(socket => {
                 console.log("Current State: Detection start");
                 if ((receivedData.indexOf("SENSOR") > -1) && (receivedData.indexOf("TRUE") > -1)) {
                     currentState = STATE.SENSOR_TRIGGER;
+                    accidentData.sensor = receivedData;
                 }
                 break;
 
@@ -64,6 +71,7 @@ let server = net.createServer(socket => {
                 console.log("Current State: Sensor triggered");
                 if ((receivedData.indexOf("GPS") > -1) && (receivedData.indexOf("TRUE") > -1)) {
                     currentState = STATE.GPS_TRIGGER;
+                    accidentData.location = receivedData;
                 }
                 break;
 
@@ -71,13 +79,14 @@ let server = net.createServer(socket => {
                 console.log("Current State: GPS triggered");
                 if ((receivedData.indexOf("CAMERA") > -1) && (receivedData.indexOf("TRUE") > -1)) {
                     currentState = STATE.CAMERA_TRIGGER;
+                    accidentData.camera = receivedData;
                 }
                 break;
 
             case STATE.CAMERA_TRIGGER:
                 console.log("Current State: Camera Triggered");
 
-                iothatMessageToSend = "Accident detected!";
+                iothatMessageToSend = `${accidentData.sensor}|${accidentData.location}|${accidentData.camera}`;
                 iothatIsMessageAvailable = true;
 
                 currentState = STATE.ACCIDENT_REPORT;
@@ -85,7 +94,7 @@ let server = net.createServer(socket => {
 
             case STATE.ACCIDENT_REPORT:
                 break;
-        
+
             default:
                 break;
         }
@@ -96,8 +105,8 @@ let server = net.createServer(socket => {
                 iothatIsMessageAvailable = false;
                 iothatMessageToSend = "";
             } else {
-		socket.write("EMPTY");
-	    }
+                socket.write("EMPTY");
+            }
         }
     });
 

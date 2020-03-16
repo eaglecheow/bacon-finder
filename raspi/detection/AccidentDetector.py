@@ -30,6 +30,9 @@ class SensorBasedDetector:
     def readValue(self):
         return self.serialReader.readLine()
 
+    def readPreviousData(self):
+        return {"accelerometer": self.accDetector.readPreviousValues()}
+
     def detect(self) -> bool:
 
         rawData = self.readValue()
@@ -53,6 +56,7 @@ class SensorBasedDetector:
             z = int(foundZ.replace("Z:", "").replace(";", ""))
             v = int(foundV.replace("V:", "").replace(";", ""))
             accDetection = self.accDetector.detect(x, y, z)
+
             return accDetection
 
         return False
@@ -83,12 +87,27 @@ class ImageBasedDetector:
             showFrame=debug,
         )
 
-    def detect(self) -> bool:
+        self.reason = [0, 0] # eyelid,movement
+
+    def readReason(self):
+        return self.reason
+
+    def detect(self):
 
         frame = self.camera.takeFrame()
 
         isEyelidActive = self.eyelidDetector.frameDetection(frame)
         isImageStatic = self.staticMovementDetector.detectStatic(frame)
+
+        if isEyelidActive == False:
+            self.reason[0] = 1
+        else:
+            self.reason[0] = 0
+
+        if isImageStatic == True:
+            self.reason[1] = 1
+        else:
+            self.reason[1] = 0
 
         print(
             "isEyelidActive: {} \tisImageStatic: {}".format(

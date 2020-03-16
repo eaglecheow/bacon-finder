@@ -52,8 +52,8 @@ def main():
         time.sleep(1)
         
         recvData = sensorSocket.recv(1024).decode()
-        if "Accident detected!" in recvData:
-            tcpHelper.sendMessage("Accident Detected")
+        if "AD ->" in recvData:
+            tcpHelper.sendMessage(recvData)
 
         continue
 
@@ -81,8 +81,8 @@ def main():
         sensorSocket.send(message.encode())
 
         recvData = sensorSocket.recv(1024).decode()
-        if "Accident detected!" in recvData:
-            tcpHelper.sendMessage("Accident Detected")
+        if "AD ->" in recvData:
+            tcpHelper.sendMessage(recvData)
             
         time.sleep(1)
 

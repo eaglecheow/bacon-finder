@@ -86,7 +86,7 @@ net.createServer(socket => {
             case STATE.CAMERA_TRIGGER:
                 console.log("Current State: Camera Triggered");
 
-                iothatMessageToSend = `${accidentData.sensor}|${accidentData.location}|${accidentData.camera}`;
+                iothatMessageToSend = `AD -> ${accidentData.sensor}|${accidentData.location}|${accidentData.camera}`;
                 iothatIsMessageAvailable = true;
 
                 currentState = STATE.ACCIDENT_REPORT;

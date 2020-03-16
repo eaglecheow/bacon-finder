@@ -24,6 +24,10 @@ let accidentData = {
     camera: ""
 }
 
+let previousTime = Date.now();
+let stateTime = 0;
+let stateTimeout = 10000;
+
 net.createServer(socket => {
 
     socket.on("connect", () => {
@@ -71,8 +75,15 @@ net.createServer(socket => {
                 console.log("Current State: Sensor triggered");
                 if ((receivedData.indexOf("GPS") > -1) && (receivedData.indexOf("TRUE") > -1)) {
                     currentState = STATE.GPS_TRIGGER;
+                    stateTime = 0;
                     accidentData.location = receivedData;
+                } else if ((Date.now() - previousTime) > stateTimeout) {
+                    currentState = STATE.DETECT_START;
+                    stateTime = 0;
+                } else {
+                    stateTime += (Date.now() - previousTime);
                 }
+
                 break;
 
             case STATE.GPS_TRIGGER:
@@ -80,7 +91,13 @@ net.createServer(socket => {
                 if ((receivedData.indexOf("CAMERA") > -1) && (receivedData.indexOf("TRUE") > -1)) {
                     currentState = STATE.CAMERA_TRIGGER;
                     accidentData.camera = receivedData;
+                } else if ((Date.now() - previousTime) > stateTimeout) {
+                    currentState = STATE.DETECT_START;
+                    stateTime = 0;
+                } else {
+                    stateTime += (Date.now() - previousTime);
                 }
+
                 break;
 
             case STATE.CAMERA_TRIGGER:
@@ -93,6 +110,10 @@ net.createServer(socket => {
                 break;
 
             case STATE.ACCIDENT_REPORT:
+
+                currentState = STATE.DETECT_START;
+                stateTime = 0;
+                
                 break;
 
             default:
@@ -108,6 +129,8 @@ net.createServer(socket => {
                 socket.write("EMPTY");
             }
         }
+
+        previousTime = Date.now();
     });
 
     socket.on("close", () => {

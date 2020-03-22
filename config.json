@@ -1,5 +1,8 @@
 {
     "generalConfig": {
+        "communication": {
+            "phoneNumber": "+601156219261"
+        },
         "camera": {
             "imageResolution": {
                 "width": 256,

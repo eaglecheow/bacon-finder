@@ -1,4 +1,5 @@
 const net = require("net");
+const fs = require("fs");
 
 const HOST = "127.0.0.1";
 const PORT = 8080;
@@ -22,14 +23,16 @@ let accidentData = {
     sensor: "",
     location: "",
     camera: ""
-}
+};
 
 let previousTime = Date.now();
 let stateTime = 0;
 let stateTimeout = 10000;
 
-net.createServer(socket => {
+const config = JSON.parse(fs.readFileSync("config.json"));
+const phoneNumber = config.generalConfig.communication.phoneNumber;
 
+net.createServer(socket => {
     socket.on("connect", () => {
         console.log(`Connected to ${socket.remoteAddress}`);
     });
@@ -65,7 +68,10 @@ net.createServer(socket => {
 
             case STATE.DETECT_START:
                 console.log("Current State: Detection start");
-                if ((receivedData.indexOf("SENSOR") > -1) && (receivedData.indexOf("TRUE") > -1)) {
+                if (
+                    receivedData.indexOf("SENSOR") > -1 &&
+                    receivedData.indexOf("TRUE") > -1
+                ) {
                     currentState = STATE.SENSOR_TRIGGER;
                     accidentData.sensor = receivedData;
                 }
@@ -73,29 +79,35 @@ net.createServer(socket => {
 
             case STATE.SENSOR_TRIGGER:
                 console.log("Current State: Sensor triggered");
-                if ((receivedData.indexOf("GPS") > -1) && (receivedData.indexOf("TRUE") > -1)) {
+                if (
+                    receivedData.indexOf("GPS") > -1 &&
+                    receivedData.indexOf("TRUE") > -1
+                ) {
                     currentState = STATE.GPS_TRIGGER;
                     stateTime = 0;
                     accidentData.location = receivedData;
-                } else if ((Date.now() - previousTime) > stateTimeout) {
+                } else if (Date.now() - previousTime > stateTimeout) {
                     currentState = STATE.DETECT_START;
                     stateTime = 0;
                 } else {
-                    stateTime += (Date.now() - previousTime);
+                    stateTime += Date.now() - previousTime;
                 }
 
                 break;
 
             case STATE.GPS_TRIGGER:
                 console.log("Current State: GPS triggered");
-                if ((receivedData.indexOf("CAMERA") > -1) && (receivedData.indexOf("TRUE") > -1)) {
+                if (
+                    receivedData.indexOf("CAMERA") > -1 &&
+                    receivedData.indexOf("TRUE") > -1
+                ) {
                     currentState = STATE.CAMERA_TRIGGER;
                     accidentData.camera = receivedData;
-                } else if ((Date.now() - previousTime) > stateTimeout) {
+                } else if (Date.now() - previousTime > stateTimeout) {
                     currentState = STATE.DETECT_START;
                     stateTime = 0;
                 } else {
-                    stateTime += (Date.now() - previousTime);
+                    stateTime += Date.now() - previousTime;
                 }
 
                 break;
@@ -103,17 +115,16 @@ net.createServer(socket => {
             case STATE.CAMERA_TRIGGER:
                 console.log("Current State: Camera Triggered");
 
-                iothatMessageToSend = `AD -> ${accidentData.sensor}|${accidentData.location}|${accidentData.camera}`;
+                iothatMessageToSend = `AD -> ${phoneNumber}|${accidentData.sensor}|${accidentData.location}|${accidentData.camera}`;
                 iothatIsMessageAvailable = true;
 
                 currentState = STATE.ACCIDENT_REPORT;
                 break;
 
             case STATE.ACCIDENT_REPORT:
-
                 currentState = STATE.DETECT_START;
                 stateTime = 0;
-                
+
                 break;
 
             default:
@@ -140,7 +151,6 @@ net.createServer(socket => {
     socket.on("error", error => {
         console.log(`Error at ${socket.remoteAddress}`);
     });
-
 }).listen(PORT, HOST);
 
 console.log(`Raspi Process running at ${HOST}:${PORT}`);

@@ -1,4 +1,4 @@
-from raspi.detection.camera.EyelidDetector import EyelidDetector
+from raspi.detection.camera.EyelidDetectorTwo import EyelidDetector
 from raspi.detection.camera.StaticMovementDetector import StaticMovementDetector
 from raspi.utils.camera.Camera import Camera
 from raspi.utils.camera.CameraType import CameraType
@@ -146,6 +146,37 @@ if __name__ == "__main__":
 #     data = json.load(jsonFile)
 
 # print(data["detectionConfig"]["imageDetectionConfig"]["eyelidDetectionConfig"]["faceModelFilePath"])
+
+
+###############
+# Sensor Test #
+###############
+
+# def main():
+
+#     print("Sensor Recording")
+#     logging.basicConfig(level=logging.DEBUG, filename="sensorData.log")
+    
+#     with open("config.json") as jsonFile:
+#         config = json.load(jsonFile)
+
+#         sensorDetector = SensorBasedDetector(
+#             config["detectionConfig"]["sensorDetectionConfig"]
+#         )
+
+#         initialTime = int(time.time() * 1000)
+
+#         while True:
+#             currentTime = int(time.time() * 1000)
+#             timeLapsed = currentTime - initialTime
+
+#             logString = sensorDetector.readValue()
+#             logging.debug(logString)
+#             time.sleep(0.05)
+
+
+# if __name__ == "__main__":
+#     main()
 
 
 #############################################

@@ -1,17 +1,16 @@
-from typing import List
 import os
 import dlib
-import numpy
-from imutils import face_utils
 import time
 
+from imutils import face_utils
 from raspi.utils.dataprocess.DataObserver import DataObserver
-
+import numpy
+from typing import List
 
 class EyelidDetector:
     def __init__(
         self,
-        predictionFilePath: str,
+        faceModelFilePath: str,
         faceAbsenceTimeout: int = 100000,
         eyelidMovementTimeout: int = 30000,
         frameTimeTimeout: int = 1000,
@@ -20,63 +19,38 @@ class EyelidDetector:
     ):
         super().__init__()
 
-        if not os.path.exists(predictionFilePath):
-            raise FileNotFoundError(predictionFilePath)
+        # Check if face model is available
+        if not os.path.exists(faceModelFilePath):
+            raise FileNotFoundError(faceModelFilePath)
 
         faceDetector = dlib.get_frontal_face_detector()
-        faceFeatureDetector = dlib.shape_predictor(predictionFilePath)
+        faceFeatureDetector = dlib.shape_predictor(faceModelFilePath)
 
         self.faceDetector = faceDetector
         self.faceFeatureDetector = faceFeatureDetector
         self.dataProcessor = DataObserver()
 
-        self.faceAbsenceTimeout = faceAbsenceTimeout
-        self.eyelidMovementTimeout = eyelidMovementTimeout
-        self.frameTimeTimeout = frameTimeTimeout
         self.eyelidMovementThreshold = eyelidMovementThreshold
-        self.showFrame = showFrame
+        self.eyelidMovementTimeout = eyelidMovementTimeout
 
-        self.isIdle = False
-        self.accumulatedIdleTime = 0
-
-        self.lastScanTime = time.time() * 1000
-        self.lastFacePresenceTime = time.time() * 1000
-        self.lastEyelidMoveTime = time.time() * 1000
-
-        if self.showFrame:
-            self.imageWindow = dlib.image_window()
-            self.imageWindow.set_title("Face Detector")
+        self.previousIdleTime = int(time.time() * 1000)
 
     def frameDetection(self, frame) -> bool:
-        currentTime = time.time() * 1000
 
-        if (currentTime - self.lastScanTime) > self.frameTimeTimeout:
-            raise Exception("[Face Detector] Each frame took too much time")
-
-        self.lastScanTime = currentTime
+        currentTime = int(time.time() * 1000)
 
         detectedFaceList = self.faceDetector(frame)
+        if len(detectedFaceList) < 1:
+            # No face detected
 
-        if self.showFrame:
-            self.imageWindow.clear_overlay()
-            self.imageWindow.set_image(frame)
+            self.previousIdleTime = currentTime
 
-        if len(detectedFaceList) <= 0:
+            return False
 
-            if (currentTime - self.lastFacePresenceTime) > self.faceAbsenceTimeout:
-                # return {'resultType': 'eyelid', 'result': False}
-                return False
-
-            # return {'resultType': 'eyelid', 'result': True}
-            return True
-
-        self.lastFacePresenceTime = currentTime
-
+        # Determining which face is the nearest to camera
         maxFaceArea = 0
         selectedFace = None
-
         for faceIndex, faceBoundingBox in enumerate(detectedFaceList):
-
             xDiff = abs(faceBoundingBox.right() - faceBoundingBox.left())
             yDiff = abs(faceBoundingBox.bottom() - faceBoundingBox.top())
             faceArea = xDiff * yDiff
@@ -85,12 +59,8 @@ class EyelidDetector:
                 maxFaceArea = faceArea
                 selectedFace = faceBoundingBox
 
+        # Extracting eyelid info from selected face
         faceFeatures = self.faceFeatureDetector(frame, selectedFace)
-
-        if self.showFrame:
-            self.imageWindow.add_overlay(selectedFace)
-            self.imageWindow.add_overlay(faceFeatures)
-
         faceFeaturePoints = face_utils.shape_to_np(faceFeatures)
         (leftEyeStartIndex, leftEyeEndIndex) = face_utils.FACIAL_LANDMARKS_IDXS[
             "left_eye"
@@ -98,28 +68,23 @@ class EyelidDetector:
         (rightEyeStartIndex, rightEyeEndIndex) = face_utils.FACIAL_LANDMARKS_IDXS[
             "right_eye"
         ]
-
         leftEyePoints = faceFeaturePoints[leftEyeStartIndex:leftEyeEndIndex]
         rightEyePoints = faceFeaturePoints[rightEyeStartIndex:rightEyeEndIndex]
-
         leftEAR = self.__eye_aspect_ratio__(leftEyePoints)
         rightEAR = self.__eye_aspect_ratio__(rightEyePoints)
         averageEAR = (leftEAR + rightEAR) / 2.0
 
+        # Process eyelid data along with previous record
         self.dataProcessor.inputValue(averageEAR)
         variance25 = self.dataProcessor.varValue * 25
 
         if variance25 > self.eyelidMovementThreshold:
-            self.lastEyelidMoveTime = currentTime
+            self.previousIdleTime = currentTime
 
-        # print("Eyelid idle time: {} ms".format(currentTime - self.lastEyelidMoveTime))
+        if (currentTime - self.previousIdleTime) > self.eyelidMovementTimeout:
+            return True
 
-        if (currentTime - self.lastEyelidMoveTime) > self.eyelidMovementTimeout:
-            # return {'resultType': 'eyelid', 'result': False}
-            return False
-
-        # return {'resultType': 'eyelid', 'result': True}
-        return True
+        return False
 
     def __euclidean_distance__(self, pointA: float, pointB: float) -> float:
 

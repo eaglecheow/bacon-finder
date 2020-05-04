@@ -13,11 +13,11 @@ void setup()
  pinMode(pinAccX, INPUT);
  pinMode(pinAccY, INPUT);
  pinMode(pinAccZ, INPUT);
- pinMode(pinShockSensor, INPUT);
+// pinMode(pinShockSensor, INPUT);
 
- Serial.print("//");
- Serial.print(millis());
- Serial.println("//");
+// Serial.print("//");
+// Serial.print(millis());
+// Serial.println("//");
 }
 
 void loop()
@@ -26,23 +26,25 @@ void loop()
  // put your main code here, to run repeatedly:
 
  // For Arduino Serial Plotter
- // Serial.print(analogRead(pinAccX));
- // Serial.print(" ");
- // Serial.print(analogRead(pinAccY));
- // Serial.print(" ");
- // Serial.print(analogRead(pinAccZ));
- // Serial.print(" ");
- // Serial.println(analogRead(pinShockSensor));
+//  Serial.print(analogRead(pinAccX));
+//  Serial.print(" ");
+//  Serial.print(analogRead(pinAccY));
+//  Serial.print(" ");
+//  Serial.println(analogRead(pinAccZ));
+//  Serial.print(" ");
+//  Serial.println(analogRead(pinShockSensor));
 
  // For Python Code
 
- Serial.print("X:");
+ Serial.print("[");
+ Serial.print(millis());
+ Serial.print("]X:");
  Serial.print(analogRead(pinAccX));
  Serial.print(";Y:");
  Serial.print(analogRead(pinAccY));
  Serial.print(";Z:");
  Serial.print(analogRead(pinAccZ));
- Serial.print(";V:");
- Serial.print(analogRead(pinShockSensor));
+// Serial.print(";V:");
+// Serial.print(analogRead(pinShockSensor));
  Serial.println(";");
 }

@@ -5,6 +5,8 @@ import numpy
 from imutils import face_utils
 import time
 
+from raspi.utils.datapresentation.GraphPlotter import GraphPlotter
+
 from raspi.utils.dataprocess.DataObserver import DataObserver
 
 
@@ -46,6 +48,10 @@ class EyelidDetector:
         if self.showFrame:
             self.imageWindow = dlib.image_window()
             self.imageWindow.set_title("Face Detector")
+            self.graphPlotter = GraphPlotter()
+            self.graphPlotter.add_plot("ear", "Eye Aspect Ratio")
+            self.graphPlotter.add_plot("variance", "Variance x25")
+            self.graphPlotter.show_graph()
 
     def frameDetection(self, frame) -> bool:
         currentTime = time.time() * 1000
@@ -111,6 +117,10 @@ class EyelidDetector:
 
         if variance25 > self.eyelidMovementThreshold:
             self.lastEyelidMoveTime = currentTime
+
+        if self.showFrame:
+            self.graphPlotter.input_value("ear", averageEAR)
+            self.graphPlotter.input_value("variance", variance25)
 
         # print("Eyelid idle time: {} ms".format(currentTime - self.lastEyelidMoveTime))
 

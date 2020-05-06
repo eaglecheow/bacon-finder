@@ -3,6 +3,7 @@ import dlib
 import cv2
 import time
 import math
+from raspi.utils.datapresentation.GraphPlotter import GraphPlotter
 
 
 class StaticMovementDetector:
@@ -21,6 +22,9 @@ class StaticMovementDetector:
 
         if self.showFrame == True:
             self.imageWindow = dlib.image_window()
+            self.graphPlotter = GraphPlotter(yRange=[0, 10])
+            self.graphPlotter.add_plot("average", "Average Keypoint Translation")
+            self.graphPlotter.show_graph()
 
         self.noiseMargin = noiseMargin
         self.movementThreshold = movementThreshold
@@ -100,6 +104,8 @@ class StaticMovementDetector:
                 self.imageWindow.set_image(outputImage)
 
             # print("Average: {}".format(numpy.average(realDistanceList)))
+            if self.showFrame:
+                self.graphPlotter.input_value("average", numpy.average(realDistanceList))
 
             if numpy.average(realDistanceList) < self.movementThreshold:
                 return True

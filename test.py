@@ -47,36 +47,36 @@ from raspi.utils.TCPHelper import TCPHelper
 # Test for GPS Reading #
 ########################
 
-def main():
-    print("GPS Test")
+# def main():
+#     print("GPS Test")
 
-    serial = SerialHelper("/dev/ttyS0")
-    # logging.basicConfig(level=logging.DEBUG, filename="gpsPath.log")
+#     serial = SerialHelper("/dev/ttyS0")
+#     # logging.basicConfig(level=logging.DEBUG, filename="gpsPath.log")
 
-    while True:
-        serial.sendLine("at")
-        try:
-            serial.waitMessage("OK", 1000)
-            print("Baud rate sync-ed")
-            break;
+#     while True:
+#         serial.sendLine("at")
+#         try:
+#             serial.waitMessage("OK", 1000)
+#             print("Baud rate sync-ed")
+#             break;
 
-        except:
-            print("Retrying on baud rate correction...")
+#         except:
+#             print("Retrying on baud rate correction...")
 
-    print("Setting up GPS Helper...")
-    gpsHelper = GPSHelper(serial)
-    print("Getting GPS location...")
-    while True:
-        gpsData = gpsHelper.getGPSLocation()
+#     print("Setting up GPS Helper...")
+#     gpsHelper = GPSHelper(serial)
+#     print("Getting GPS location...")
+#     while True:
+#         gpsData = gpsHelper.getGPSLocation()
 
-        message = "Speed: {}".format(gpsData.speed)
+#         message = "Speed: {}".format(gpsData.speed)
 
-        print(message)
-        # logging.debug(message)
+#         print(message)
+#         # logging.debug(message)
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 
 ##############################
@@ -121,21 +121,21 @@ if __name__ == "__main__":
 ####################################
 
 
-# def main():
-#     with open("config.json") as jsonFile:
-#         config = json.load(jsonFile)
+def main():
+    with open("config.json") as jsonFile:
+        config = json.load(jsonFile)
 
-#     imageBasedDetector = ImageBasedDetector(
-#         CameraType.WEB_CAM,
-#         config["detectionConfig"]["imageDetectionConfig"],
-#         cameraConfig=config["generalConfig"]["camera"],
-#         debug=True,
-#     )
+    imageBasedDetector = ImageBasedDetector(
+        CameraType.WEB_CAM,
+        config["detectionConfig"]["imageDetectionConfig"],
+        cameraConfig=config["generalConfig"]["camera"],
+        debug=True,
+    )
 
-#     while True:
-#         imageBasedDetector.detect()
-# if __name__ == "__main__":
-#     main()
+    while True:
+        imageBasedDetector.detect()
+if __name__ == "__main__":
+    main()
 
 
 ##############################
